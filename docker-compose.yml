@@ -1,0 +1,22 @@
+version: '3'
+services:
+  db:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
+    volumes:
+      - db-volume:/var/lib/mysql
+      - ./initdb:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+  web:
+    build:
+      context: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/go/src/clean_architecture_api
+    command: bash -c "go run /go/src/clean_architecture_api/server.go"
+volumes:
+  db-volume:
